@@ -1,0 +1,192 @@
+[user]
+  name = bvp
+  email =
+  signingkey = BF6F3BCD
+[http]
+# proxy = http://127.0.0.1:3128
+# proxy = socks5://127.0.0.1:9050
+# sslcainfo = D:/Apps/Git/mingw64/ssl/certs/ca-bundle.crt
+# sslVerify = false
+# postBuffer = 524288000
+[https]
+# proxy = 127.0.0.1:3128
+# postBuffer = 157286400
+# proxy = socks5://127.0.0.1:9050
+[alias]
+  st = status
+  ci = commit -S
+  br = branch
+  co = checkout
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  logstat = log --graph --all --topo-order --decorate --oneline --stat --full-diff -p --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)<%an>%Creset%n' --date=format:'%Y.%m.%d %H:%M:%S'
+  lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+  lg3 = log --graph --abbrev-commit --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative --stat --all
+  lg4 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset %GS' --abbrev-commit
+  # Show commit log using graph notation
+  lg5 = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lg = !git lg1
+  # Inspect history in various ways
+  news = log -p HEAD@{1}..HEAD@{0}
+  sl = shortlog
+  # Show compact history
+  l = "!git log --graph --pretty='tformat:%C(yellow)%h{%C(green)%ar{%C(bold blue)%an{%C(red)%d%C(reset) %s' $* | column -t -s '{' | less -FXRS"
+  # List commits showing changed files
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+  ra = log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+
+  # See all the commits related to a file
+  filelog = log -u
+  fl = log -u
+
+  lastTag = describe --tags `git rev-list --tags --max-count=1`
+  cc = rev-list HEAD --count
+  stat = shortlog -s -n
+  type = cat-file -t
+  dump = cat-file -p
+  undo = reset --soft HEAD~
+  aliases = config --get-regexp alias
+  ls = ls-files
+  ign = ls-files -o -i --exclude-standard
+  pom = push origin master --tags
+  show-rev = !sh -c 'git rev-list HEAD | wc -l'
+  show-rev-number = !sh -c 'git rev-list --full-history --all --reverse HEAD | nl | awk \"{ if(\\$1 == $0) { print \\$2  } }\"'
+  show-rev-number-short = !sh -c 'git rev-list --full-history --all --abbrev-commit --reverse HEAD | nl | awk \"{ if(\\$1 == $0) { print \\$2  } }\"'
+  authors = "!git log --pretty=format:%aN | sort | uniq -c | sort -rn"
+  markdown = !BN=$(git name-rev --name-only HEAD) && git log --no-merges --grep=$BN --pretty=oneline | awk -F"$BN: " '{print \"-\", $NF}' | uniq
+  # Create an empty commit, only having a commit message
+  msg = commit --allow-empty -m
+  pf = push --force-with-lease
+  r = remote
+  rh = reset --hard
+  ru = remote update --prune
+  s = status --short --branch
+  sm = submodule
+  sma = submodule add
+  smu = submodule update --init --recursive
+  wd = diff --word-diff="color"
+  wdc = diff --word-diff="color" --cached
+  push = push --tags
+  regret = reset
+
+  # Make stashing easier
+  sta = stash
+  stl = stash list
+  stp = stash pop
+
+  # Make rebasing easier
+  irb = rebase --interactive
+  rb = rebase
+  rba = rebase --abort
+  rbc = rebase --continue
+  rbs = rebase --skip
+
+  # Easier merging
+  m = merge -s recursive -X patience
+  mm = merge --no-ff
+  merge-branch = !git checkout master && git merge @{-1}
+  conflicted = grep --name-only --full-name '<<<<<<< HEAD'
+  # Pick our version of a file while merging
+  ours = "!f() { git co --ours $@ && git add $@;  }; f"
+  # Pick their version of a file while merging
+  theirs = "!f() { git co --theirs $@ && git add $@;  }; f"
+
+  # Easily ignore committed, but changed files that I don't want to commit
+  assume = update-index --assume-unchanged
+  assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+  assumeall = "!git st -s | awk {'print $2'} | xargs git assume"
+  unassume = update-index --no-assume-unchanged
+  unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
+
+  # The following aliases were nabbed from http://kamalmarhubi.com/blog/2016/02/29/my-git-aliases/
+  # Print absolute path of repo root directory
+  root = rev-parse --show-toplevel
+  # Get to a detached HEAD state on purpose! Usage: `git detach [REF]`
+  detach = "!sh -c 'git checkout $(git rev-parse ${1:-HEAD})' --"
+  # Print short sha1; usage: `git sha1 [REF]`
+  sha1 = "!sh -c 'git rev-parse --short ${1:-HEAD}' --"
+  start = !git init && git commit --allow-empty -m \"Initial commit\"
+
+[core]
+  quotepath = false
+  autocrlf = input
+  whitespace = fix,indent-with-non-tab,trailing-space,cr-at-eol,space-before-tab
+# pager = iconv.exe -f cp1251 -t utf-8 | less
+  excludesfile = ~/.gitignore_global
+  eol = native
+[branch]
+  autosetupmerge = true
+[apply]
+  whitespace = nowarn
+[push]
+  default = tracking
+  recurseSubmodules = check
+[credential]
+  helper = store
+[gui]
+  encoding = utf-8
+[diff]
+  tool = vimdiff
+  renames = copies
+  mnemonicprefix = true
+  algorithm = histogram
+  compactionHeuristic = true
+# guitool = tmerge
+[pager]
+  difftool = true
+[i18n]
+  commitencoding = utf8
+  logoutputencoding = utf8
+[filter "indent"]
+  clean = indent
+  smudge = cat
+[log]
+  date = local
+#[merge]
+# tool = TortoiseMerge
+#[difftool "tmerge"]
+# path = C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe
+# cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" \"$LOCAL\" \"$REMOTE\"
+#[mergetool "TortoiseMerge"]
+# path = C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe
+# cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"
+[pull]
+  rebase = true
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  whitespace = red reverse
+  old = red strike
+  new = green italic
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[http]
+  slVerify = false
+[http "https://gopkg.in"]
+  followRedirects = true
+[advice]
+  pushNonFastForward = false
+  statusHints = false
+[rerere]
+  enabled = true
+[merge]
+  stat = true
+[rebase]
+  autosquash = true
+[status]
+  submodulesummary = true
+[gpg]
+  program = gpg2
